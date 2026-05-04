@@ -10,16 +10,17 @@ extern uint32_t pc;
 extern uint8_t memory[];
 extern FILE *instructionLog;
 
-void interpret(struct Instruction instr);
-void handleRInstruction(struct Instruction instr);
-void handleIInstruction(struct Instruction instr);
-void handleILoadInstruction(struct Instruction instr);
-void handleSInstruction(struct Instruction instr);
-void handleBInstruction(struct Instruction instr);
-void handleULuiInstruction(struct Instruction instr);
-void handleUAuipcInstruction(struct Instruction instr);
-void handleJJalInstruction(struct Instruction instr);
-void handleIJalrInstruction(struct Instruction instr);
+int interpret(struct Instruction instr);
+int handleRInstruction(struct Instruction instr);
+int handleIInstruction(struct Instruction instr);
+int handleILoadInstruction(struct Instruction instr);
+int handleSInstruction(struct Instruction instr);
+int handleBInstruction(struct Instruction instr);
+int handleULuiInstruction(struct Instruction instr);
+int handleUAuipcInstruction(struct Instruction instr);
+int handleJJalInstruction(struct Instruction instr);
+int handleIJalrInstruction(struct Instruction instr);
+int handleIEcallEbreakInstruction(struct Instruction instr);
 
 uint32_t loadWord(uint32_t offset);
 uint32_t loadHalf(uint32_t offset);

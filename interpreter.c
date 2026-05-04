@@ -4,61 +4,66 @@
  * This function pulls the opcode from the instruction, and calls the
  * appropriate method to execute the corresponding instruction type.
  */
-void interpret(struct Instruction instr) {
+int interpret(struct Instruction instr) {
+    int out;
+
     switch(instr.opcode) {
         // R Type Instructions
         case 0b0110011:
-            handleRInstruction(instr);
+            out = handleRInstruction(instr);
             break;
         // I Type Instructions
         case 0b0010011:
-            handleIInstruction(instr);
+            out = handleIInstruction(instr);
             break;
         // I Type Load Instructions
         case 0b0000011:
-            handleILoadInstruction(instr);
+            out = handleILoadInstruction(instr);
             break;
         // S Type Instructions
         case 0b0100011:
-            handleSInstruction(instr);
+            out = handleSInstruction(instr);
             break;
         // B Type Instructions
         case 0b1100011:
-            handleBInstruction(instr);
+            out = handleBInstruction(instr);
             break;
         // U Type lui Instructions
         case 0b0110111:
-            handleULuiInstruction(instr);
+            out = handleULuiInstruction(instr);
             break;
         // U Type auipc Instructions
         case 0b0010111:
-            handleUAuipcInstruction(instr);
+            out = handleUAuipcInstruction(instr);
             break;
         // J Type jal Instructions
         case 0b1101111:
-            handleJJalInstruction(instr);
+            out = handleJJalInstruction(instr);
             break;
         // I Type jalr Instructions
         case 0b1100111:
-            handleIJalrInstruction(instr);
+            out = handleIJalrInstruction(instr);
             break;
         // I Type ecall & ebreak Instructions
         case 0b1110011:
-            handleIEcallEbreakInstruction(instr);
+            out = handleIEcallEbreakInstruction(instr);
             break;
         // Unknown Instructions
         default:
             fprintf(instructionLog, "Unrecognized Instruction Detected\n");
+            out = 0;
     }
 
     // Register 0 must always hold the value of 0.
     registers[0] = 0;
+
+    return out;
 }
 
 /**
  * This function handles any R-type instructions.
  */
-void handleRInstruction(struct Instruction instr) {
+int handleRInstruction(struct Instruction instr) {
     uint8_t rd = instr.bits7_11;
     uint8_t rs1 = instr.bits15_19;
     uint8_t rs2 = instr.bits20_24;
@@ -81,6 +86,8 @@ void handleRInstruction(struct Instruction instr) {
             // Unknown Instruction
             else {
                 fprintf(instructionLog, "Unrecognized R Instruction Detected\n");
+                perror("Unrecognized R Instruction Interpreted\n");
+                return 0;
             }
             break;
         // xor Instruction
@@ -118,6 +125,8 @@ void handleRInstruction(struct Instruction instr) {
             // Unknown Instruction
             else {
                 fprintf(instructionLog, "Unrecognized R Instruction Detected\n");
+                perror("Unrecognized R Instruction Interpreted\n");
+                return 0;
             }
             break;
         // slt Instruction
@@ -141,13 +150,18 @@ void handleRInstruction(struct Instruction instr) {
         // Unknown Instruction
         default:
             fprintf(instructionLog, "Unrecognized R Instruction Interpreted\n");
+            perror("Unrecognized R Instruction Interpreted\n");
+            return 0;
     }
+
+    pc += 4;
+    return 1;
 }
 
 /**
  * This method handles any I type instructions.
  */
-void handleIInstruction(struct Instruction instr) {
+int handleIInstruction(struct Instruction instr) {
     uint8_t rd = instr.bits7_11;
     uint8_t rs1 = instr.bits15_19;
     int32_t imm = (instr.bits25_31 << 5) | (instr.bits20_24);
@@ -185,6 +199,8 @@ void handleIInstruction(struct Instruction instr) {
                 break;
             }
             fprintf(instructionLog, "Unrecognized I Instruction Detected\n");
+            perror("Unrecognized I Instruction Detected\n");
+            return 0;
             break;
         // srli & srai Instruction
         case 0x5:
@@ -199,6 +215,8 @@ void handleIInstruction(struct Instruction instr) {
                 break;
             }
             fprintf(instructionLog, "Uncreognized I Instruction Detected\n");
+            perror("Unrecognized I Instruction Detected\n");
+            return 0;
             break;
         // slti Instruction
         case 0x2:
@@ -218,17 +236,22 @@ void handleIInstruction(struct Instruction instr) {
             else {
                 registers[rd] = 0;
             }
-            fprintf(instructionLog, "I Type slti Instruction Interpreted\n");
+            fprintf(instructionLog, "I Type sltiu Instruction Interpreted\n");
             break;
         default: 
             fprintf(instructionLog, "Unrecognized I Instruction Detected\n");
+            perror("Unrecognized I Instruction Detected\n");
+            return 0;
     }
+
+    pc += 4;
+    return 1;
 }
 
 /**
  * This method handles any I type load instructions.
  */
-void handleILoadInstruction(struct Instruction instr) {
+int handleILoadInstruction(struct Instruction instr) {
     uint8_t rd = instr.bits7_11;
     uint8_t rs1 = instr.bits15_19;
     int32_t imm = (instr.bits25_31 << 5) | (instr.bits20_24);
@@ -263,14 +286,18 @@ void handleILoadInstruction(struct Instruction instr) {
             break;
         default:
             fprintf(instructionLog, "Unrecognized I Instruction Detected\n");
+            perror("Unrecognized I Instruction Detected\n");
+            return 0;
     }
-    
+
+    pc += 4;
+    return 1;
 }
 
 /**
  * This method handles any S type instructions.
  */
-void handleSInstruction(struct Instruction instr) {
+int handleSInstruction(struct Instruction instr) {
     uint8_t rs1 = instr.bits15_19;
     uint8_t rs2 = instr.bits20_24;  
     int32_t imm = (instr.bits25_31 << 5) | (instr.bits7_11);
@@ -295,13 +322,18 @@ void handleSInstruction(struct Instruction instr) {
             break;
         default:
             fprintf(instructionLog, "Unrecognized S Instruction Detected\n");
+            perror("Unrecognized S Instruction Detected\n");
+            return 0;
     }
+
+    pc += 4;
+    return 1;
 }
 
 /**
- * This method handles any B type instructions. Note, PC + 4 occurs automatically, so the imm - 4 is necessary to adjust
+ * This method handles any B type instructions.
  */
-void handleBInstruction(struct Instruction instr) {
+int handleBInstruction(struct Instruction instr) {
     uint8_t rs1 = instr.bits15_19;
     uint8_t rs2 = instr.bits20_24;  
     int32_t imm = ((instr.bits25_31 & 0x40) << 6) | ((instr.bits7_11 & 0x01) << 11) | ((instr.bits25_31 & 0x3F) << 5) | ((instr.bits7_11 & 0x1E));
@@ -312,55 +344,76 @@ void handleBInstruction(struct Instruction instr) {
         // beq Instruction
         case 0x0:
             if (registers[rs1] == registers[rs2]) {
-                pc += imm - 4;
+                pc += imm;
+            }
+            else {
+                pc += 4;
             }
             fprintf(instructionLog, "B Type beq Instruction Interpreted");
             break;
         // bne Instruction
         case 0x1:
             if (registers[rs1] != registers[rs2]) {
-                pc += imm - 4;
+                pc += imm;
+            }
+            else {
+                pc += 4;
             }
             fprintf(instructionLog, "B Type bne Instruction Interpreted");
             break;
         // blt Instruction
         case 0x4:
             if ((int32_t)registers[rs1] < (int32_t)registers[rs2]) {
-                pc += imm - 4;
+                pc += imm;
+            }
+            else {
+                pc += 4;
             }
             fprintf(instructionLog, "B Type blt Instruction Interpreted");
             break;
         // bge Instruction
         case 0x5:
             if ((int32_t)registers[rs1] >= (int32_t)registers[rs2]) {
-                pc += imm - 4;
+                pc += imm;
+            }
+            else {
+                pc += 4;
             }
             fprintf(instructionLog, "B Type bge Instruction Interpreted");
             break;
         // bltu Instruction
         case 0x6:
             if (registers[rs1] < registers[rs2]) {
-                pc += imm - 4;
+                pc += imm;
+            }
+            else {
+                pc += 4;
             }
             fprintf(instructionLog, "B Type bltu Instruction Interpreted");
             break;
         // bgeu Instruction
         case 0x7:
             if (registers[rs1] >= registers[rs2]) {
-                pc += imm - 4;
+                pc += imm;
+            }
+            else {
+                pc += 4;
             }
             fprintf(instructionLog, "B Type bgeu Instruction Interpreted");
             break;
         default:
             fprintf(instructionLog, "Unrecognized B Type Instruction Detected");
+            perror("Unrecognized B Instruction Detected\n");
+            return 0;
     }
 
+    return 1;
 }
 
 /**
  * This method handles U type instructions, specifically the lui instruction.
  */
-void handleULuiInstruction(struct Instruction instr) {
+int handleULuiInstruction(struct Instruction instr) {
     uint8_t rd = instr.bits7_11;
     int32_t imm = ((instr.bits25_31 << 25) 
         | (instr.bits20_24 << 20) 
@@ -369,12 +422,15 @@ void handleULuiInstruction(struct Instruction instr) {
 
     registers[rd] = imm;
     fprintf(instructionLog, "U Type lui Instruction Interpreted\n");
+
+    pc += 4;
+    return 1;
 }
 
 /**
  * This method handles U type instructions, specifically the auipc instruction.
  */
-void handleUAuipcInstruction(struct Instruction instr) {
+int handleUAuipcInstruction(struct Instruction instr) {
     uint8_t rd = instr.bits7_11;
     int32_t imm = ((instr.bits25_31 << 25) 
         | (instr.bits20_24 << 20) 
@@ -383,12 +439,15 @@ void handleUAuipcInstruction(struct Instruction instr) {
 
     registers[rd] = imm + pc;
     fprintf(instructionLog, "U Type auipc Instruction Interpreted\n");
+
+    pc += 4;
+    return 1;
 }
 
 /**
  * This method handles J type instructions, specifically the jal instruction.
  */
-void handleJJalInstruction(struct Instruction instr) {
+int handleJJalInstruction(struct Instruction instr) {
     uint8_t rd = instr.bits7_11;
     int32_t imm = 
         ((instr.bits25_31 & 0x40) << 14) | 
@@ -402,12 +461,13 @@ void handleJJalInstruction(struct Instruction instr) {
     registers[rd] = pc + 4;
     pc = pc + imm;
     fprintf(instructionLog, "J Type jal Instruction Interpreted\n");
+    return 1;
 }
 
 /**
  * This method handles I type instructions, specifically the jalr instruction.
  */
-void handleIJalrInstruction(struct Instruction instr) {
+int handleIJalrInstruction(struct Instruction instr) {
     uint8_t rd = instr.bits7_11;
     uint8_t rs1 = instr.bits15_19;
     int32_t imm = (instr.bits25_31 << 5) | (instr.bits20_24);
@@ -418,12 +478,13 @@ void handleIJalrInstruction(struct Instruction instr) {
     registers[rd] = pc + 4;
     pc = (registers[rs1] + imm) & 0xFFFFFFFE;
     fprintf(instructionLog, "I Type jalr Instruction Interpreted\n");
+    return 1;
 }
 
 /**
  * This method is a very basic way of handling any ecall or ebreak instructions.
  */
-void handleIEcallEbreakInstruction(struct Instruction instr) {
+int handleIEcallEbreakInstruction(struct Instruction instr) {
     uint8_t rd = instr.bits7_11;
     uint8_t rs1 = instr.bits15_19;
     int32_t imm = (instr.bits25_31 << 5) | (instr.bits20_24);
@@ -461,8 +522,18 @@ void handleIEcallEbreakInstruction(struct Instruction instr) {
             case 8:
             default:
                 fprintf(instructionLog, "Unrecognized ecall Instruction Detected\n");
+                perror("Unrecognized ecall Instruction Detected\n");
+                return 0;
         }
     }
+    else {
+        perror("I Type ebreak Instruction Detected\n");
+        printf("I Type ebreak Instruction Detected, Terminating Program\n");
+        return 0;
+    }
+
+    pc += 4;
+    return 1;
 }
 
 

@@ -3,18 +3,18 @@
 void testManager() {
     int RInstructionResults = testRInstructions();
     if (RInstructionResults) {
-        printf("R Instruction Tests Passed\n");
+        fprintf(instructionLog, "R Instruction Tests Passed\n\n");
     }
     else {
-        printf("R Instruction Tests Failed\n");
+        fprintf(instructionLog, "R Instruction Tests Failed\n\n");
     }
 
     int IInstructionResults = testIInstructions();
     if (IInstructionResults) {
-        printf("I Instruction Tests Passed\n");
+        fprintf(instructionLog, "I Instruction Tests Passed\n\n");
     }
     else {
-        printf("I Instruction Tests Failed\n");
+        fprintf(instructionLog, "I Instruction Tests Failed\n\n");
     }
 }
 

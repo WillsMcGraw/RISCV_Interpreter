@@ -1,0 +1,21 @@
+R Type add Interpreted
+R Type sub Interpreted
+R Type xor Interpreted
+R Type or Interpreted
+R Type and Interpreted
+R Type sll Interpreted
+R Type srl Interpreted
+R Type sra Interpreted
+R Instruction Tests Passed
+
+I Type addi Instruction Interpreted
+I Type xori Instruction Interpreted
+I Type ori Instruction Interpreted
+I Type andi Instruction Interpreted
+I Type slti Instruction Interpreted
+I Type slti Instruction Interpreted
+I Type slli Instruction Interpreted
+I Type srli Instruction Interpreted
+I Type srai Instruction Interpreted
+I Instruction Tests Passed
+

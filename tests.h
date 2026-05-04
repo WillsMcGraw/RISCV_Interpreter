@@ -9,6 +9,7 @@
 
 extern uint32_t registers[];
 extern uint32_t pc;
+extern FILE *instructionLog;
 
 void testManager();
 int testRInstructions();

@@ -5,7 +5,7 @@
 #include "instruction.h"
 #include "parser.h"
 #include "interpreter.h"
-#include "tests.h"
+#include "basic_instruction_testing.h"
 
 #define MEM_SIZE (1024 * 1024) // 1 MB
 

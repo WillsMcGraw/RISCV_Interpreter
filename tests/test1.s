@@ -1,4 +1,4 @@
-	.file	"simpleTest1.c"
+	.file	"test1.c"
 	.option nopic
 	.attribute arch, "rv32i2p1"
 	.attribute unaligned_access, 0
@@ -20,7 +20,7 @@ main:
 	lw	a5,-24(s0)
 	add	a5,a4,a5
 	sw	a5,-28(s0)
-	lw	a5,-28(s0)
+	li	a5,0
 	mv	a0,a5
 	lw	ra,28(sp)
 	lw	s0,24(sp)

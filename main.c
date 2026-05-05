@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "instruction.h"
 #include "parser.h"
@@ -25,14 +26,15 @@ int main(int argc, char *argv[]) {
     }
 
     // Prep environment
+    memset(memory, 0, MEM_SIZE);
+    memset(registers, 0, 32 * 4);
     instructionLog = fopen("instructionLog.txt", "w");
     FILE *program = fopen(argv[1], "rb");
-    int programLength = fread(memory, 1, MEM_SIZE, program);
-    initialize();
-
+    size_t programLength = fread(memory, 1, MEM_SIZE, program);
+    
     // Run program, note: pc is updated in interpret()
     int program_status = 1;
-    while (program_status) {
+    while (program_status && pc + 3 < programLength) {
         uint32_t instruction = loadWord(pc);
         struct Instruction parsed_instruction = parseInstruction(instruction);
         program_status = interpret(parsed_instruction);
@@ -43,17 +45,4 @@ int main(int argc, char *argv[]) {
     fclose(instructionLog);
     fclose(program);
     return 0;
-}
-
-void printRegisters(uint32_t registers[]) {
-    for (uint32_t i = 0; i < 32; i++) {
-        printf("Register %d: %d\n", i, registers[i]);
-    }
-}
-
-void initialize() {
-    for (uint32_t i = 0; i < 32; i++) {
-        registers[i] = 0;
-    }
-    pc = 0;
 }

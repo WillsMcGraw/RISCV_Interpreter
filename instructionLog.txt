@@ -1,1 +1,18 @@
-Unrecognized Instruction Detected
+I Type addi Instruction Interpreted,  	PC: 0, Instruction: fe010113
+S Type sw Instruction Interpreted,  	PC: 4, Instruction: 00112e23
+S Type sw Instruction Interpreted,  	PC: 8, Instruction: 00812c23
+I Type addi Instruction Interpreted,  	PC: 12, Instruction: 02010413
+I Type addi Instruction Interpreted,  	PC: 16, Instruction: 00200793
+S Type sw Instruction Interpreted,  	PC: 20, Instruction: fef42623
+I Type addi Instruction Interpreted,  	PC: 24, Instruction: 00300793
+S Type sw Instruction Interpreted,  	PC: 28, Instruction: fef42423
+I Type lw Instruction Interpreted,  	PC: 32, Instruction: fec42703
+I Type lw Instruction Interpreted,  	PC: 36, Instruction: fe842783
+R Type add Instruction Interpreted,  	PC: 40, Instruction: 00f707b3
+S Type sw Instruction Interpreted,  	PC: 44, Instruction: fef42223
+I Type addi Instruction Interpreted,  	PC: 48, Instruction: 00000793
+I Type addi Instruction Interpreted,  	PC: 52, Instruction: 00078513
+I Type lw Instruction Interpreted,  	PC: 56, Instruction: 01c12083
+I Type lw Instruction Interpreted,  	PC: 60, Instruction: 01812403
+I Type addi Instruction Interpreted,  	PC: 64, Instruction: 02010113
+I Type jalr Instruction Interpreted,  	PC: 65534, Instruction: 00008067

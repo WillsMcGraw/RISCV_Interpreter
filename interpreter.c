@@ -50,7 +50,7 @@ int interpret(struct Instruction instr) {
             break;
         // Unknown Instructions
         default:
-            fprintf(instructionLog, "Unrecognized Instruction Detected\n");
+            fprintf(instructionLog, "Unrecognized Instruction Detected, %08x\n", instr.instruction);
             out = 0;
     }
 
@@ -76,16 +76,16 @@ int handleRInstruction(struct Instruction instr) {
             // add Instruction
             if (funct7 == 0x00) {
                 registers[rd] = registers[rs1] + registers[rs2];
-                fprintf(instructionLog, "R Type add Interpreted\n");
+                fprintf(instructionLog, "R Type add Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             }
             // sub Instruction
             else if (funct7 == 0x20) {
                 registers[rd] = registers[rs1] - registers[rs2];
-                fprintf(instructionLog, "R Type sub Interpreted\n");
+                fprintf(instructionLog, "R Type sub Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             }
             // Unknown Instruction
             else {
-                fprintf(instructionLog, "Unrecognized R Instruction Detected\n");
+                fprintf(instructionLog, "Unrecognized R Instruction Detected, %08x\n", instr.instruction);
                 perror("Unrecognized R Instruction Interpreted\n");
                 return 0;
             }
@@ -93,38 +93,38 @@ int handleRInstruction(struct Instruction instr) {
         // xor Instruction
         case 0x4:
             registers[rd] = registers[rs1] ^ registers[rs2];
-            fprintf(instructionLog, "R Type xor Interpreted\n");
+            fprintf(instructionLog, "R Type xor Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             break;
         // or Instruction
         case 0x6:
             registers[rd] = registers[rs1] | registers[rs2];
-            fprintf(instructionLog, "R Type or Interpreted\n");
+            fprintf(instructionLog, "R Type or Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             break;
         // and instruction
         case 0x7:
             registers[rd] = registers[rs1] & registers[rs2];
-            fprintf(instructionLog, "R Type and Interpreted\n");
+            fprintf(instructionLog, "R Type and Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             break;
         // sll Instruction
         case 0x1:
             registers[rd] = registers[rs1] << (registers[rs2] & 0x1F);
-            fprintf(instructionLog, "R Type sll Interpreted\n");
+            fprintf(instructionLog, "R Type sll Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             break;
         // srl & sra Instruction
         case 0x5:
             // srl Instruction
             if (funct7 == 0x00) {
                 registers[rd] = registers[rs1] >> (registers[rs2] & 0x1F);
-                fprintf(instructionLog, "R Type srl Interpreted\n");
+                fprintf(instructionLog, "R Type srl Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             }
             // sra Instruction
             else if (funct7 == 0x20) {
                 registers[rd] = ((int32_t) registers[rs1]) >> (registers[rs2] & 0x1F);
-                fprintf(instructionLog, "R Type sra Interpreted\n");
+                fprintf(instructionLog, "R Type sra Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             }
             // Unknown Instruction
             else {
-                fprintf(instructionLog, "Unrecognized R Instruction Detected\n");
+                fprintf(instructionLog, "Unrecognized R Instruction Detected, %08x\n", instr.instruction);
                 perror("Unrecognized R Instruction Interpreted\n");
                 return 0;
             }
@@ -149,7 +149,7 @@ int handleRInstruction(struct Instruction instr) {
             break;
         // Unknown Instruction
         default:
-            fprintf(instructionLog, "Unrecognized R Instruction Interpreted\n");
+            fprintf(instructionLog, "Unrecognized R Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             perror("Unrecognized R Instruction Interpreted\n");
             return 0;
     }
@@ -174,31 +174,31 @@ int handleIInstruction(struct Instruction instr) {
         // addi Instruction
         case 0x0: 
             registers[rd] = registers[rs1] + imm;
-            fprintf(instructionLog, "I Type addi Instruction Interpreted\n");
+            fprintf(instructionLog, "I Type addi Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             break;
         // xori Instruction
         case 0x4:
             registers[rd] = registers[rs1] ^ imm;
-            fprintf(instructionLog, "I Type xori Instruction Interpreted\n");
+            fprintf(instructionLog, "I Type xori Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             break;
         // ori Instruction
         case 0x6:
             registers[rd] = registers[rs1] | imm;
-            fprintf(instructionLog, "I Type ori Instruction Interpreted\n");
+            fprintf(instructionLog, "I Type ori Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             break;
         // andi Instruction
         case 0x7:
             registers[rd] = registers[rs1] & imm;
-            fprintf(instructionLog, "I Type andi Instruction Interpreted\n");
+            fprintf(instructionLog, "I Type andi Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             break;
         // slli Instruction 
         case 0x1:
             if (imm5_11 == 0x00) {
                 registers[rd] = registers[rs1] << imm0_4;
-                fprintf(instructionLog, "I Type slli Instruction Interpreted\n");
+                fprintf(instructionLog, "I Type slli Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
                 break;
             }
-            fprintf(instructionLog, "Unrecognized I Instruction Detected\n");
+            fprintf(instructionLog, "Unrecognized I Instruction Detected, %08x\n", instr.instruction);
             perror("Unrecognized I Instruction Detected\n");
             return 0;
             break;
@@ -206,15 +206,15 @@ int handleIInstruction(struct Instruction instr) {
         case 0x5:
             if (imm5_11 == 0x00) {
                 registers[rd] = registers[rs1] >> imm0_4;
-                fprintf(instructionLog, "I Type srli Instruction Interpreted\n");
+                fprintf(instructionLog, "I Type srli Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
                 break;
             }
             else if (imm5_11 == 0x20) {
                 registers[rd] = ((int32_t)registers[rs1]) >> imm0_4;
-                fprintf(instructionLog, "I Type srai Instruction Interpreted\n");
+                fprintf(instructionLog, "I Type srai Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
                 break;
             }
-            fprintf(instructionLog, "Uncreognized I Instruction Detected\n");
+            fprintf(instructionLog, "Uncreognized I Instruction Detected, %08x\n", instr.instruction);
             perror("Unrecognized I Instruction Detected\n");
             return 0;
             break;
@@ -226,7 +226,7 @@ int handleIInstruction(struct Instruction instr) {
             else {
                 registers[rd] = 0;
             }
-            fprintf(instructionLog, "I Type slti Instruction Interpreted\n");
+            fprintf(instructionLog, "I Type slti Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             break;
         // sltiu Instruction
         case 0x3:
@@ -236,10 +236,10 @@ int handleIInstruction(struct Instruction instr) {
             else {
                 registers[rd] = 0;
             }
-            fprintf(instructionLog, "I Type sltiu Instruction Interpreted\n");
+            fprintf(instructionLog, "I Type sltiu Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             break;
         default: 
-            fprintf(instructionLog, "Unrecognized I Instruction Detected\n");
+            fprintf(instructionLog, "Unrecognized I Instruction Detected, %08x\n", instr.instruction);
             perror("Unrecognized I Instruction Detected\n");
             return 0;
     }
@@ -262,30 +262,30 @@ int handleILoadInstruction(struct Instruction instr) {
         // lb Instruction
         case 0x0:
             registers[rd] = (int32_t)(int8_t)loadByte(registers[rs1] + imm);
-            fprintf(instructionLog, "I Type lb Instruction Interpreted\n");
+            fprintf(instructionLog, "I Type lb Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             break;
         // lh Instruction
         case 0x1:
             registers[rd] = (int32_t)(int16_t)loadHalf(registers[rs1] + imm);
-            fprintf(instructionLog, "I Type lh Instruction Interpreted\n");
+            fprintf(instructionLog, "I Type lh Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             break;
         // lw Instruction
         case 0x2:
             registers[rd] = loadWord(registers[rs1] + imm);
-            fprintf(instructionLog, "I Type lw Instruction Interpreted\n");
+            fprintf(instructionLog, "I Type lw Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             break;
         // lbu Instruction
         case 0x4:
             registers[rd] = loadByte(registers[rs1] + imm);
-            fprintf(instructionLog, "I Type lbu Instruction Interpreted\n");
+            fprintf(instructionLog, "I Type lbu Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             break;
         // lhu Instruction
         case 0x5:
             registers[rd] = loadHalf(registers[rs1] + imm);
-            fprintf(instructionLog, "I Type lhu Instruction Interpreted\n");
+            fprintf(instructionLog, "I Type lhu Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             break;
         default:
-            fprintf(instructionLog, "Unrecognized I Instruction Detected\n");
+            fprintf(instructionLog, "Unrecognized I Instruction Detected, %08x\n", instr.instruction);
             perror("Unrecognized I Instruction Detected\n");
             return 0;
     }
@@ -308,20 +308,20 @@ int handleSInstruction(struct Instruction instr) {
         // sb Instruction
         case 0x0:
             saveByte(registers[rs1] + imm, registers[rs2]);
-            fprintf(instructionLog, "S Type sb Instruction Interpreted\n");
+            fprintf(instructionLog, "S Type sb Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             break;
         // sh Instruction
         case 0x1:
             saveHalf(registers[rs1] + imm, registers[rs2]);
-            fprintf(instructionLog, "S Type sh Instruction Interpreted\n");
+            fprintf(instructionLog, "S Type sh Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             break;
         // sw Instruction
         case 0x2:
             saveWord(registers[rs1] + imm, registers[rs2]);
-            fprintf(instructionLog, "S Type sw Instruction Interpreted\n");
+            fprintf(instructionLog, "S Type sw Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
             break;
         default:
-            fprintf(instructionLog, "Unrecognized S Instruction Detected\n");
+            fprintf(instructionLog, "Unrecognized S Instruction Detected, %08x\n", instr.instruction);
             perror("Unrecognized S Instruction Detected\n");
             return 0;
     }
@@ -421,7 +421,7 @@ int handleULuiInstruction(struct Instruction instr) {
         | (instr.bits12_14 << 12));
 
     registers[rd] = imm;
-    fprintf(instructionLog, "U Type lui Instruction Interpreted\n");
+    fprintf(instructionLog, "U Type lui Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
 
     pc += 4;
     return 1;
@@ -438,7 +438,7 @@ int handleUAuipcInstruction(struct Instruction instr) {
         | (instr.bits12_14 << 12));
 
     registers[rd] = imm + pc;
-    fprintf(instructionLog, "U Type auipc Instruction Interpreted\n");
+    fprintf(instructionLog, "U Type auipc Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
 
     pc += 4;
     return 1;
@@ -460,7 +460,7 @@ int handleJJalInstruction(struct Instruction instr) {
 
     registers[rd] = pc + 4;
     pc = pc + imm;
-    fprintf(instructionLog, "J Type jal Instruction Interpreted\n");
+    fprintf(instructionLog, "J Type jal Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
     return 1;
 }
 
@@ -477,7 +477,7 @@ int handleIJalrInstruction(struct Instruction instr) {
     
     registers[rd] = pc + 4;
     pc = (registers[rs1] + imm) & 0xFFFFFFFE;
-    fprintf(instructionLog, "I Type jalr Instruction Interpreted\n");
+    fprintf(instructionLog, "I Type jalr Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
     return 1;
 }
 
@@ -496,17 +496,17 @@ int handleIEcallEbreakInstruction(struct Instruction instr) {
             // Print Integer ecall
             case 1:
                 printf("%d", (int32_t)registers[10]);
-                fprintf(instructionLog, "I Type ecall Print Integer Instruction Interpreted\n");
+                fprintf(instructionLog, "I Type ecall Print Integer Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
                 break;
             // Print String ecall
             case 4:
                 printf("%s", (char *)&memory[registers[10]]);
-                fprintf(instructionLog, "I Type ecall Print String Instruction Interpreted\n");
+                fprintf(instructionLog, "I Type ecall Print String Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
                 break;
             // Print Hexadecimal ecall
             case 34:
                 printf("%x", (int32_t)registers[10]);
-                fprintf(instructionLog, "I Type ecall Print Integer as Hex Instruction Interpreted\n");
+                fprintf(instructionLog, "I Type ecall Print Integer as Hex Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
                 break;
             // Print Binary ecall
             case 35:
@@ -517,11 +517,11 @@ int handleIEcallEbreakInstruction(struct Instruction instr) {
                 int32_t value;
                 value = scanf("%d", &value);
                 registers[10] = (uint32_t)value;
-                fprintf(instructionLog, "I Type ecall Read Integer Instruction Interpreted\n");
+                fprintf(instructionLog, "I Type ecall Read Integer Instruction Interpreted,  \tPC: %u, Instruction: %08x\n", pc, instr.instruction);
                 break;
             case 8:
             default:
-                fprintf(instructionLog, "Unrecognized ecall Instruction Detected\n");
+                fprintf(instructionLog, "Unrecognized ecall Instruction Detected, %08x\n", instr.instruction);
                 perror("Unrecognized ecall Instruction Detected\n");
                 return 0;
         }

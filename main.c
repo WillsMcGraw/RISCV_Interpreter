@@ -9,7 +9,7 @@
 
 #define MEM_SIZE (1024 * 1024) // 1 MB
 
-void printRegisters(uint32_t registers[]);
+void printRegisters();
 void initialize();
 
 FILE *instructionLog;
@@ -31,6 +31,9 @@ int main(int argc, char *argv[]) {
     instructionLog = fopen("instructionLog.txt", "w");
     FILE *program = fopen(argv[1], "rb");
     size_t programLength = fread(memory, 1, MEM_SIZE, program);
+    // Set the stack pointer & return address
+    registers[2] = MEM_SIZE - 4;
+    registers[1] = 0x0000FFFF;
     
     // Run program, note: pc is updated in interpret()
     int program_status = 1;
@@ -38,11 +41,22 @@ int main(int argc, char *argv[]) {
         uint32_t instruction = loadWord(pc);
         struct Instruction parsed_instruction = parseInstruction(instruction);
         program_status = interpret(parsed_instruction);
+
+        printf("PC: %u, Instruction: %08x\n", pc, instruction);
+        printf("Instruction handled\n");
     }
+
+    printRegisters();
 
     //testManager();
 
     fclose(instructionLog);
     fclose(program);
     return 0;
+}
+
+void printRegisters() {
+    for (int i = 0; i < 32; i++) {
+        printf("Register %d: %d\n", i, registers[i]);
+    }
 }

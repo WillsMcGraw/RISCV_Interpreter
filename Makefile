@@ -1,10 +1,10 @@
 
-CFLAGS = -Wall -Wextra
+CFLAGS = -Wextra
 
-all: interp
+all: emulator
 
-interp: main.o parser.o interpreter.o tests.o
-	gcc $(CFLAGS) main.o parser.o interpreter.o tests.o -o interp
+emulator: main.o parser.o interpreter.o basic_instruction_testing.o
+	gcc $(CFLAGS) main.o parser.o interpreter.o basic_instruction_testing.o -o emulator
 
 main.o: main.c 
 	gcc $(CFLAGS) -c main.c
@@ -15,8 +15,8 @@ parser.o: parser.c
 interpreter.o: interpreter.c 
 	gcc $(CFLAGS) -c interpreter.c
 
-tests.o: tests.c 
-	gcc $(CFLAGS) -c tests.c
+basic_instruction_testing.o: basic_instruction_testing.c 
+	gcc $(CFLAGS) -c basic_instruction_testing.c
 
 clean:
-	rm main.o parser.o interpreter.o tests.o interp instructionLog.txt
+	rm main.o parser.o interpreter.o basic_instruction_testing.o emulator instructionLog.txt

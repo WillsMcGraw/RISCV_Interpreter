@@ -1,4 +1,4 @@
-#include "tests.h"
+#include "basic_instruction_testing.h"
 
 void testManager() {
     int RInstructionResults = testRInstructions();
